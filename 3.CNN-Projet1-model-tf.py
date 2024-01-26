@@ -28,8 +28,6 @@ model = models.Sequential([
 
     # data_augmentation,
 
-
-
     layers.Conv2D(32, kernel_size, activation="relu"),
     layers.MaxPooling2D(2, 2),
     # layers.Dropout(.25),
@@ -58,10 +56,9 @@ model = models.Sequential([
 # Modele
 # Adam : learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-7, ema_momentum=0.99
 model.compile(
-    optimizer=keras.optimizers.Adam(),
-    # optimizer=keras.optimizers.SGD(learning_rate=0.05, momentum=0.9),
-    loss=keras.losses.CategoricalCrossentropy(),
-    metrics=[keras.metrics.Accuracy()],
+    optimizer="adam",
+    loss="categorical_crossentropy",
+    metrics=["accuracy"]
 )
 
 model.summary()

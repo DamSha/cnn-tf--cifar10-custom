@@ -28,26 +28,35 @@ model = models.Sequential([
 
     # data_augmentation,
 
+    layers.Conv2D(16, kernel_size, padding="same", activation="relu"),
+    layers.Conv2D(16, kernel_size, activation="relu"),
+    layers.MaxPooling2D(2, 2),
+    layers.Dropout(.25),
+    layers.Conv2D(32, kernel_size, padding="same", activation="relu"),
     layers.Conv2D(32, kernel_size, activation="relu"),
     layers.MaxPooling2D(2, 2),
-    # layers.Dropout(.25),
+    layers.Dropout(.25),
+    layers.Conv2D(64, kernel_size, padding="same", activation="relu"),
     layers.Conv2D(64, kernel_size, activation="relu"),
-    # layers.Conv2D(64, kernel_size, activation="relu"),
     layers.MaxPooling2D(2, 2),
-    # layers.Dropout(.4),
+    layers.Dropout(.25),
+    layers.Conv2D(128, kernel_size, padding="same", activation="relu"),
     layers.Conv2D(128, kernel_size, activation="relu"),
-    # layers.Conv2D(128, kernel_size, activation="relu"),
     layers.MaxPooling2D(2, 2),
-    # layers.Dropout(.4),
+    layers.Dropout(.25),
+    layers.Conv2D(256, kernel_size, padding="same", activation="relu"),
+    layers.Conv2D(256, kernel_size, activation="relu"),
+    layers.MaxPooling2D(2, 2),
+    layers.Dropout(.25),
 
     # Vectorisation
     layers.Flatten(),
-    # Neurones profonds
-    # layers.Dense(1024, activation="relu"),
-    # layers.Dense(1024, activation="relu"),
-    layers.Dense(128, activation="relu"),
-    # layers.Dropout(.5),
 
+    # Neurones profonds
+    layers.Dense(1024, activation="relu"),
+    # layers.Dense(1024, activation="relu"),
+    layers.Dropout(.4),
+    # layers.Dense(128, activation="relu"),
 
     # Neurones de sortie
     layers.Dense(len(classes), activation="softmax")
@@ -56,9 +65,16 @@ model = models.Sequential([
 # Modele
 # Adam : learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-7, ema_momentum=0.99
 model.compile(
-    optimizer="adam",
-    loss="categorical_crossentropy",
-    metrics=["accuracy"]
+    # optimizer=keras.optimizers.SGD(),
+    optimizer=keras.optimizers.Adam(),
+    loss=keras.losses.CategoricalCrossentropy(),
+    # loss="categorical_crossentropy",
+    metrics=[keras.metrics.CategoricalAccuracy(),
+             # keras.metrics.F1Score(),
+             # keras.metrics.FalsePositives(),
+             # keras.metrics.FalseNegatives(),
+             ]
+    # metrics=["accuracy"]
 )
 
 model.summary()
@@ -87,7 +103,7 @@ validation_generator = train_datagen.flow_from_directory(
 
 # Early Stopper Callback
 # Au bout de "patience" fois où la valeur de "monitor" ne change plus trop
-model_train_callback = EarlyStopping(restore_best_weights=True, patience=2, verbose=True)
+model_train_callback = EarlyStopping(restore_best_weights=True, patience=2, verbose=True, start_from_epoch=10)
 
 # Entrainement du modele
 history = model.fit(
@@ -111,8 +127,8 @@ pyplot.plot(history.history['val_loss'], color='orange', label='test')
 # plot accuracy
 pyplot.subplot(212)
 pyplot.title('Classification Accuracy')
-pyplot.plot(history.history['accuracy'], color='blue', label='train')
-pyplot.plot(history.history['val_accuracy'], color='orange', label='test')
+pyplot.plot(history.history['categorical_accuracy'], color='blue', label='train')
+pyplot.plot(history.history['val_categorical_accuracy'], color='orange', label='test')
 
 pyplot.savefig("tf_models/history--model_cnn_cifar10-custom-v2.png")
 pyplot.show()

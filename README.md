@@ -54,15 +54,13 @@
   - Ajout d'images virtuellement par augmentation :
     - RandomFlip("horizontal_and_vertical")
     - RandomRotation(0.2)
-  - Ajout de couches de DropOut (après Pooling) pour mitiger l'apprentissage
-  - Changement de l'optimizer par SGD
   - Augmentation Epoque : 50 (avec toujours le early stop)
   - Résultats Version 2.1 : 
-    - Pire que tout 😭😭😭
+    - 68% 🥹
 - V2.2 :
-  - Suppression des dropouts
-  - Suppression de l'augmentation RandomRotation
-  - Retour à Adam
-  - Ajout de couches de conv
-  - Résultats Version 2.2 : 
-  - 
+  - Suppression des augmentations
+  - Augmentation des couches de conv
+  - Augmentation des couches de neurones
+  - Ajout de couches de DropOut (après Pooling) pour mitiger l'apprentissage
+- V2.3 :
+  - Changement de l'optimizer par SGD
